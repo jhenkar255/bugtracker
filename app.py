@@ -33,6 +33,8 @@ def init_db():
     # ✅ INSERT ADMIN USER (CORRECT)
     try:
         cur.execute("INSERT INTO users (username, password, role) VALUES ('admin','admin123','admin')")
+        cur.execute("INSERT INTO users (username, password, role) VALUES ('jhenkar','jhenkar','jhenkar')")
+        cur.execute("INSERT INTO users (username, password, role) VALUES ('staff1','staf123','staff')")
     except:
         pass
 
