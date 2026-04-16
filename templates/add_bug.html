@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add Bug | Bug Tracker</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    min-height: 100vh;
+}
+.card {
+    border-radius: 15px;
+}
+</style>
+
+</head>
+
+<body class="d-flex justify-content-center align-items-center">
+
+<div class="card shadow p-4" style="width: 500px;">
+
+```
+<h3 class="text-center mb-3">🐞 Report New Bug</h3>
+
+<!-- Error Message -->
+{% if error %}
+<div class="alert alert-danger text-center">
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="POST" onsubmit="return validateForm()">
+
+    <!-- Title -->
+    <div class="mb-3">
+        <label class="form-label">Bug Title</label>
+        <input id="title" name="title" class="form-control" placeholder="Enter bug title" required>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea id="desc" name="description" class="form-control" rows="3" placeholder="Describe the issue"></textarea>
+    </div>
+
+    <!-- Priority -->
+    <div class="mb-3">
+        <label class="form-label">Priority</label>
+        <select id="priority" name="priority" class="form-select">
+            <option value="Low">Low 🟢</option>
+            <option value="Medium">Medium 🟡</option>
+            <option value="High">High 🔴</option>
+        </select>
+    </div>
+
+    <!-- Assign -->
+    <div class="mb-3">
+        <label class="form-label">Assign To</label>
+        <input id="assigned" name="assigned" class="form-control" placeholder="Enter staff username">
+    </div>
+
+    <!-- Date -->
+    <div class="mb-3">
+        <label class="form-label">Date</label>
+        <input type="datetime-local" name="date" class="form-control">
+    </div>
+
+    <!-- Submit -->
+    <button class="btn btn-success w-100">Submit Bug</button>
+
+</form>
+
+<hr>
+
+<div class="text-center">
+    <a href="/dashboard">⬅ Back to Dashboard</a>
+</div>
+```
+
+</div>
+
+<script>
+function validateForm() {
+    let title = document.getElementById("title").value;
+
+    if (title.length < 3) {
+        alert("Title must be at least 3 characters");
+        return false;
+    }
+    return true;
+}
+</script>
+
+</body>
+</html>
