@@ -23,15 +23,19 @@ def init_db():
 
     # Create bugs table
     cur.execute('''CREATE TABLE IF NOT EXISTS bugs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        description TEXT,
-        status TEXT,
-        created_at TEXT,
-        assigned_to TEXT)''')
-
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    description TEXT,
+    status TEXT,
+    priority TEXT,
+    created_at TEXT,
+    assigned_to TEXT)''')
     # ✅ INSERT ADMIN USER (CORRECT)
     try:
+        priority = request.form["priority"]
+
+        cur.execute("INSERT INTO bugs (title, description, status, priority, created_at, assigned_to) VALUES (?, ?, ?, ?, ?, ?)",
+    (t, d, "Open", priority, str(datetime.now()), a))
         cur.execute("INSERT INTO users (username, password, role) VALUES ('admin','admin123','admin')")
         cur.execute("INSERT INTO users (username, password, role) VALUES ('jhenkar','jhenkar123','jhenkar')")
         cur.execute("INSERT INTO users (username, password, role) VALUES ('staff1','staf123','staff')")
@@ -62,7 +66,14 @@ def login():
             return redirect("/dashboard")
 
     return render_template("login.html")
-
+@app.route("/update/<int:id>")
+def update_status(id):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("UPDATE bugs SET status='Closed' WHERE id=?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect("/dashboard")
 # Dashboard
 @app.route("/dashboard")
 @app.route("/dashboard")
@@ -112,6 +123,31 @@ def resolve(id):
 
     return redirect("/dashboard")
 
+@app.route("/delete/<int:id>")
+def delete_bug(id):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM bugs WHERE id=?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect("/dashboard")
+@app.route("/edit/<int:id>", methods=["GET", "POST"])
+def edit_bug(id):
+    conn = get_db()
+    cur = conn.cursor()
+
+    if request.method == "POST":
+        t = request.form["title"]
+        d = request.form["description"]
+        cur.execute("UPDATE bugs SET title=?, description=? WHERE id=?", (t, d, id))
+        conn.commit()
+        conn.close()
+        return redirect("/dashboard")
+
+    cur.execute("SELECT * FROM bugs WHERE id=?", (id,))
+    bug = cur.fetchone()
+    conn.close()
+    return render_template("edit_bug.html", bug=bug)
 # Logout
 @app.route("/logout")
 def logout():
