@@ -7,45 +7,71 @@
 
 <body class="bg-light">
 
+<nav class="navbar navbar-dark bg-dark px-3">
+    <span class="navbar-brand">Bug Tracker</span>
+    <a href="/" class="btn btn-danger">Logout</a>
+</nav>
+
 <div class="container mt-4">
 
-<h2>Bug Tracker Dashboard</h2>
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Dashboard</h3>
+        <a href="/create" class="btn btn-primary">+ Create Bug</a>
+    </div>
 
-<a href="/create" class="btn btn-primary">Create Bug</a>
-<a href="/logout" class="btn btn-danger float-end">Logout</a>
+    <table class="table table-bordered table-hover bg-white shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Assigned</th>
+                <th>Action</th>
+            </tr>
+        </thead>
 
-<table class="table table-bordered mt-3">
-<tr>
-<th>ID</th>
-<th>Title</th>
-<th>Status</th>
-<th>Assigned</th>
-<th>Action</th>
-</tr>
+        <tbody>
+            {% for bug in bugs %}
+            <tr>
+                <td>{{bug[0]}}</td>
+                <td>{{bug[1]}}</td>
+                <td>{{bug[2]}}</td>
+                
+                <td>
+                    {% if bug[3] == "Open" %}
+                        <span class="badge bg-warning text-dark">Open</span>
+                    {% else %}
+                        <span class="badge bg-success">Closed</span>
+                    {% endif %}
+                </td>
 
-{% for bug in bugs %}
-<tr>
-<td>{{ bug[0] }}</td>
-<td>{{ bug[1] }}</td>
+                <td>
+                    {% if bug[4] == "High" %}
+                        <span class="badge bg-danger">High</span>
+                    {% elif bug[4] == "Medium" %}
+                        <span class="badge bg-primary">Medium</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Low</span>
+                    {% endif %}
+                </td>
 
-<td>
-{% if bug[3]=='Open' %}
-<span class="badge bg-warning">Open</span>
-{% else %}
-<span class="badge bg-success">Resolved</span>
-{% endif %}
-</td>
+                <td>{{bug[6]}}</td>
 
-<td>{{ bug[5] if bug|length > 5 else '' }}</td>
+                <td>
+                    <a href="/update/{{bug[0]}}" class="btn btn-success btn-sm">Close</a>
+                    <a href="/edit/{{bug[0]}}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="/delete/{{bug[0]}}" class="btn btn-danger btn-sm">Delete</a>
+                    <a href="/logout" class="btn btn-danger">Logout</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
 
-<td>
-<a href="/resolve/{{ bug[0] }}" class="btn btn-success btn-sm">Resolve</a>
-</td>
-</tr>
-{% endfor %}
-
-</table>
+    </table>
 
 </div>
+
 </body>
 </html>
